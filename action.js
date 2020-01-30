@@ -6,6 +6,7 @@ const issueIdRegEx = /([a-zA-Z0-9]+-[0-9]+)/g
 const eventTemplates = {
   branch: '{{event.ref}}',
   commits: "{{event.commits.map(c=>c.message).join(' ')}}",
+  pullrequest: "{{event.pull_request.head.ref}}",
 }
 
 module.exports = class {
@@ -22,7 +23,8 @@ module.exports = class {
   }
 
   async execute () {
-    const template = eventTemplates[this.argv.from] || this.argv._.join(' ')
+    console.log(`argv = ${JSON.stringify(this.argv)}`)
+    const template = eventTemplates[this.argv.from] || this.argv.string
     const extractString = this.preprocessString(template)
     const match = extractString.match(issueIdRegEx)
 
